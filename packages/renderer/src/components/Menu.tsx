@@ -52,7 +52,7 @@ export function Menu(props: Props) {
           >
             <img src="./../assets/sheep.png" />
             <img src="./../assets/goat.png" />
-            <img src="./../assets/add_tag.png" />
+            <img src="./../assets/birth.png" />
           </button>
           Urodzenie
         </div>
@@ -149,6 +149,17 @@ export function Menu(props: Props) {
             </svg>
           </button>
           Sprzedaż
+        </div>
+        <div className="sh-menu__item sh-menu__item--death">
+          <button
+            className="sh-menu__item__button"
+            onClick={() => props.switchScreen('death')}
+          >
+            <img src="./../assets/sheep.png" />
+            <img src="./../assets/goat.png" />
+            <img src="./../assets/death.png" />
+          </button>
+          Zgon
         </div>
       </div>
       <p className="sh-menu__stats">

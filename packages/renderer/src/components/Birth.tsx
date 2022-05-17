@@ -266,7 +266,7 @@ export function Birth(props: Props) {
               form.formState.errors.genotype
             )}
           </p>
-          <button type="submit">Sprawdź i zapisz</button>
+          <button type="submit">Zgłoś urodzenie</button>
         </form>
       </div>
     </div>

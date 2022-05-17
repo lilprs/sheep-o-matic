@@ -5,6 +5,7 @@ import { AnimalSpecies } from './database'
 import { Toaster } from 'react-hot-toast'
 import { Purchase } from './components/Purchase'
 import { Sell } from './components/Sell'
+import { Death } from './components/Death'
 
 const App = () => {
   const [species, setSpecies] =
@@ -32,6 +33,11 @@ const App = () => {
       <Sell
         species={species}
         open={screen === 'sell'}
+        onClose={() => setScreen('menu')}
+      />
+      <Death
+        species={species}
+        open={screen === 'death'}
         onClose={() => setScreen('menu')}
       />
       <Toaster />

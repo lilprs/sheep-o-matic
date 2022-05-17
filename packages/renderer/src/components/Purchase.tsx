@@ -279,7 +279,7 @@ export function Purchase(props: Props) {
               form.formState.errors.siedziba_stada_zbywcy
             )}
           </p>
-          <button type="submit">Sprawdź i zapisz</button>
+          <button type="submit">Zgłoś kupno</button>
         </form>
       </div>
     </div>

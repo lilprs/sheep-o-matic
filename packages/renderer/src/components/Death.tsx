@@ -1,18 +1,12 @@
 import clsx from 'clsx'
-import {
-  Controller,
-  useForm,
-  useWatch,
-} from 'react-hook-form'
-import { format } from 'date-fns'
 import { DayPicker } from 'react-day-picker'
+import { Controller, useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import {
   AnimalSpecies,
   saveDatabase,
   store,
-  useStore,
 } from '../database'
-import toast from 'react-hot-toast'
 import { formatFormErrorMessage } from '../utils'
 
 type Props = {
@@ -20,12 +14,11 @@ type Props = {
   onClose: () => void
   species: AnimalSpecies
 }
-export function Sell(props: Props) {
+export function Death(props: Props) {
   const form = useForm({
     defaultValues: {
-      sell_date: new Date(),
+      death_date: new Date(),
       registration_number: '',
-      siedziba_stada_nabywcy: '',
     },
   })
   const onSubmit = (data: any) => {
@@ -49,13 +42,11 @@ export function Sell(props: Props) {
       return
     } else if (
       found_animal &&
-      found_animal.sell_date !== null
+      found_animal.death_date !== null
     ) {
       form.setError('registration_number', {
         type: 'custom',
-        message:
-          'Zwierzę zostało już sprzedane nabywcy ' +
-          found_animal.siedziba_stada_nabywcy,
+        message: 'Zgon został zgłoszony już wcześniej.',
       })
       return
     }
@@ -67,9 +58,7 @@ export function Sell(props: Props) {
         ) {
           return {
             ...a,
-            sell_date: data.sell_date,
-            siedziba_stada_nabywcy:
-              data.siedziba_stada_nabywcy,
+            death_date: data.death_date,
           }
         }
         return a
@@ -86,7 +75,7 @@ export function Sell(props: Props) {
       })}
     >
       <div className="sh-form-screen__dialog">
-        <h1>Sprzedaż</h1>
+        <h1>Zgon</h1>
         <button
           className="sh-dialog__close"
           onClick={() => props.onClose()}
@@ -115,9 +104,9 @@ export function Sell(props: Props) {
           </p>
           <div className="sh-split">
             <div className="sh-date">
-              <label>Data zbycia</label>
+              <label>Data upadku</label>
               <Controller
-                name="sell_date"
+                name="death_date"
                 control={form.control}
                 rules={{ required: true }}
                 render={({ field }: any) => (
@@ -130,28 +119,12 @@ export function Sell(props: Props) {
               />
               <p className="sh-form__error">
                 {formatFormErrorMessage(
-                  form.formState.errors.sell_date
+                  form.formState.errors.death_date
                 )}
               </p>
             </div>
           </div>
-          <label className="sh-inline">
-            <span>Siedziba stada nabywcy</span>
-            <input
-              {...form.register('siedziba_stada_nabywcy', {
-                required: true,
-                pattern: /^[A-Za-z]{2}[0-9]{12}$/,
-              })}
-              type="text"
-              placeholder="Np. PL12345678912"
-            />
-          </label>
-          <p className="sh-form__error">
-            {formatFormErrorMessage(
-              form.formState.errors.siedziba_stada_nabywcy
-            )}
-          </p>
-          <button type="submit">Zgłoś sprzedaż</button>
+          <button type="submit">Zgłoś upadek</button>
         </form>
       </div>
     </div>
