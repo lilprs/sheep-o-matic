@@ -161,6 +161,17 @@ export function Menu(props: Props) {
           </button>
           Zgon
         </div>
+        <div className="sh-menu__item sh-menu__item--search">
+          <button
+            className="sh-menu__item__button"
+            onClick={() => props.switchScreen('search')}
+          >
+            <img src="./../assets/sheep.png" />
+            <img src="./../assets/goat.png" />
+            <img src="./../assets/search.png" />
+          </button>
+          Baza
+        </div>
       </div>
       <p className="sh-menu__stats">
         Zwierząt w bazie: {store.animals.length} / Owiec:{' '}

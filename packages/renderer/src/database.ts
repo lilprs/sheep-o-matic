@@ -4,10 +4,11 @@ import create from 'zustand'
 
 export type AnimalSpecies = 'sheep' | 'goat'
 
-type Animal = {
+export type Animal = {
   species: AnimalSpecies
   birth_date: string
   marking_date: string
+  purchase_date: string | null
   sell_date: string | null
   death_date: string | null
   registration_number: string
@@ -17,6 +18,7 @@ type Animal = {
   genotype: string
   siedziba_stada_zbywcy: string
   siedziba_stada_nabywcy: string
+  dane_przewoznika: string
 }
 
 export const store = createVanilla<{

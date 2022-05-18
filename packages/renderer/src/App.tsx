@@ -6,6 +6,7 @@ import { Toaster } from 'react-hot-toast'
 import { Purchase } from './components/Purchase'
 import { Sell } from './components/Sell'
 import { Death } from './components/Death'
+import { Search } from './components/Search'
 
 const App = () => {
   const [species, setSpecies] =
@@ -38,6 +39,11 @@ const App = () => {
       <Death
         species={species}
         open={screen === 'death'}
+        onClose={() => setScreen('menu')}
+      />
+      <Search
+        species={species}
+        open={screen === 'search'}
         onClose={() => setScreen('menu')}
       />
       <Toaster />

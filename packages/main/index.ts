@@ -1,6 +1,13 @@
-import { app, BrowserWindow, shell } from 'electron'
+import {
+  app,
+  BrowserWindow,
+  shell,
+  dialog,
+  ipcMain,
+} from 'electron'
 import { release } from 'os'
 import { join } from 'path'
+import { writeFile } from 'fs/promises'
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1'))
@@ -72,4 +79,24 @@ app.on('activate', () => {
   } else {
     createWindow()
   }
+})
+
+ipcMain.on('print-to-pdf', async function (event, arg) {
+  const pdfPath = await (dialog as any).showSaveDialog({
+    defaultPath: 'raport.pdf',
+  })
+  const win = new BrowserWindow({ width: 800, height: 600 })
+  await win.loadURL(
+    'data:text/html;charset=utf-8,' +
+      encodeURIComponent(arg)
+  )
+  const printed = await win.webContents.printToPDF({
+    printBackground: true,
+    landscape: true,
+    marginsType: 2,
+  })
+
+  await writeFile(pdfPath.filePath, printed)
+  // shell.openExternal('file://' + pdfPath)
+  // event.sender.send('wrote-pdf', pdfPath)
 })

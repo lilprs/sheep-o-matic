@@ -75,6 +75,18 @@ export function Birth(props: Props) {
           normalized_mother_registration_number
         )
       })
+    const found_children = store
+      .getState()
+      .animals.filter((animal) => {
+        return (
+          animal.mother_registration_number
+            .toLowerCase()
+            .trim() ===
+            normalized_mother_registration_number &&
+          new Date(animal.birth_date).getTime() >
+            new Date().getTime() - 1000 * 60 * 60 * 24 * 365
+        )
+      })
     if (!found_mother) {
       form.setError('mother_registration_number', {
         type: 'custom',
@@ -90,6 +102,15 @@ export function Birth(props: Props) {
       })
       return
     }
+    if (found_children.length >= 2) {
+      form.setError('mother_registration_number', {
+        type: 'custom',
+        message:
+          'Matka urodziła już ' +
+          found_children.length +
+          ' razy w ciągu ostatniego roku. Nie można odnotować kolejnego urodzenia.',
+      })
+    }
     store.setState((state) => ({
       animals: [
         ...state.animals,
@@ -97,6 +118,7 @@ export function Birth(props: Props) {
           species: props.species,
           birth_date: data.birth_date.toISOString(),
           marking_date: data.marking_date.toISOString(),
+          purchase_date: null,
           sell_date: null,
           death_date: null,
           registration_number: data.registration_number,
@@ -107,6 +129,7 @@ export function Birth(props: Props) {
           genotype: data.genotype,
           siedziba_stada_zbywcy: '',
           siedziba_stada_nabywcy: '',
+          dane_przewoznika: '',
         },
       ],
     }))
@@ -190,7 +213,7 @@ export function Birth(props: Props) {
               </p>
             </div>
             <div className="sh-date">
-              <label>Data oznaczenia</label>
+              <label>Data oznakowania</label>
               <Controller
                 name="marking_date"
                 control={form.control}

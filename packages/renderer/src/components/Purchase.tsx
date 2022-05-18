@@ -25,6 +25,7 @@ export function Purchase(props: Props) {
     defaultValues: {
       birth_date: new Date(),
       marking_date: new Date(),
+      purchase_date: new Date(),
       registration_number: '',
       mother_registration_number: '',
       karyotype: 'XX',
@@ -94,6 +95,7 @@ export function Purchase(props: Props) {
           species: props.species,
           birth_date: data.birth_date.toISOString(),
           marking_date: data.marking_date.toISOString(),
+          purchase_date: data.purchase_date.toISOString(),
           sell_date: null,
           death_date: null,
           registration_number: data.registration_number,
@@ -104,6 +106,7 @@ export function Purchase(props: Props) {
           genotype: data.genotype,
           siedziba_stada_zbywcy: data.siedziba_stada_zbywcy,
           siedziba_stada_nabywcy: '',
+          dane_przewoznika: '',
         },
       ],
     }))
@@ -203,6 +206,26 @@ export function Purchase(props: Props) {
               <p className="sh-form__error">
                 {formatFormErrorMessage(
                   form.formState.errors.marking_date
+                )}
+              </p>
+            </div>
+            <div className="sh-date">
+              <label>Data zakupu</label>
+              <Controller
+                name="purchase_date"
+                control={form.control}
+                rules={{ required: true }}
+                render={({ field }: any) => (
+                  <DayPicker
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                  />
+                )}
+              />
+              <p className="sh-form__error">
+                {formatFormErrorMessage(
+                  form.formState.errors.purchase_date
                 )}
               </p>
             </div>

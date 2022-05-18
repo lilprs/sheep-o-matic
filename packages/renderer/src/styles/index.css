@@ -429,6 +429,14 @@ strong {
   position: relative;
 }
 
+.sh-form-screen__dialog--wide {
+  background: var(--sh-white2);
+  padding: 24px;
+  border-radius: 12px;
+  width: 850px;
+  position: relative;
+}
+
 .sh-form-screen h1 {
   font-size: 32px;
   color: var(--sh-dialog-color);
