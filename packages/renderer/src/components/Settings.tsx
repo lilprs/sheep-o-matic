@@ -1,27 +1,28 @@
+import { Button } from '@mantine/core'
 import clsx from 'clsx'
-import { DayPicker } from 'react-day-picker'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import {
-  AnimalSpecies,
   saveDatabase,
-  store,
+  store as vanilla_store,
+  useStore,
 } from '../database'
 import { formatFormErrorMessage } from '../utils'
-import { Button } from '@mantine/core'
 
 type Props = {
   open: boolean
   onClose: () => void
 }
 export function Settings(props: Props) {
+  const store = useStore()
   const form = useForm({
     defaultValues: {
-      numer_siedziby_stada: '',
+      numer_siedziby_stada:
+        store.settings.numer_siedziby_stada,
     },
   })
   const onSubmit = (data: any) => {
-    store.setState((state) => ({
+    vanilla_store.setState((state) => ({
       settings: {
         numer_siedziby_stada: data.numer_siedziby_stada,
       },
@@ -34,7 +35,7 @@ export function Settings(props: Props) {
     const exported = JSON.stringify({
       _version: 1,
       _date: new Date().toISOString(),
-      ...store.getState(),
+      ...vanilla_store.getState(),
     })
     window.ipcRenderer.send('save-exported', exported)
   }

@@ -42,10 +42,7 @@ export function Sell(props: Props) {
         message: 'Nie znaleziono zwierzęcia w bazie',
       })
       return
-    } else if (
-      found_animal &&
-      found_animal.sell_date !== null
-    ) {
+    } else if (found_animal && found_animal.sell_date) {
       form.setError('registration_number', {
         type: 'custom',
         message:

@@ -33,6 +33,16 @@ window.ipcRenderer.on('imported-data', (event, data) => {
   toast.success('Pomyślnie zaimportowano bazę danych')
 })
 
+window.ipcRenderer.on('export-ok', (event) => {
+  toast.success(
+    'Pomyślnie wyeksportowano bazę danych do pliku'
+  )
+})
+
+window.ipcRenderer.on('pdf-ok', (event) => {
+  toast.success('Pomyślnie wygenerowano raport')
+})
+
 openDatabase().then(() => {
   const root = createRoot(document.getElementById('root')!)
 

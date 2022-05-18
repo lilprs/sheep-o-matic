@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import {
   Animal,
   AnimalSpecies,
+  saveDatabase,
   store as vanilla_store,
   useStore,
 } from '../database'
@@ -554,6 +555,21 @@ export function Search(props: Props) {
     )
   }
 
+  const deleteAnimals = () => {
+    const ok = window.confirm(
+      `Czy na pewno usunąć wybrane zwierzęta?`
+    )
+    if (!ok) {
+      return
+    }
+    vanilla_store.setState({
+      animals: store.animals.filter(
+        (a) => !selectedRows.includes(a)
+      ),
+    })
+    saveDatabase()
+  }
+
   const columns = [
     {
       name: 'Numer ident.',
@@ -737,16 +753,24 @@ export function Search(props: Props) {
               color="green"
               onClick={makeReportPdf}
             >
-              Generuj księgę rejestracji
+              Księga rejestracji
             </Button>
-            <br />
             <Button
               size="xs"
               style={{ margin: '0 5px' }}
               color="green"
               onClick={makeQuantityPdf}
             >
-              Generuj spis stada
+              Spis stada
+            </Button>
+            <br />
+            <Button
+              size="xs"
+              style={{ margin: '0 5px' }}
+              color="red"
+              onClick={deleteAnimals}
+            >
+              Usuń wybrane zwierzęta z bazy
             </Button>
           </div>
         </div>

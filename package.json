@@ -1,10 +1,11 @@
 {
-  "name": "electron-vue-vite",
+  "name": "sheep-o-matic",
   "version": "1.0.0",
   "main": "dist/main/index.cjs",
+  "author": "Lilian Prus <h3ruta@icloud.com>",
   "scripts": {
     "dev": "node scripts/watch.mjs",
-    "build": "tsc --noEmit -p packages/renderer/tsconfig.json && node scripts/build.mjs && electron-builder"
+    "build": "tsc --noEmit -p packages/renderer/tsconfig.json && node scripts/build.mjs && electron-builder -mwl"
   },
   "engines": {
     "node": ">=14.17.0"

@@ -1,5 +1,14 @@
 import clsx from 'clsx'
 import { useStore } from '../database'
+import sheep_img from './../../public/assets/sheep.png'
+import goat_img from './../../public/assets/goat.png'
+import birth_img from './../../public/assets/birth.png'
+import death_img from './../../public/assets/death.png'
+import search_img from './../../public/assets/search.png'
+import settings_img from './../../public/assets/settings.png'
+import black_moomin_transparent_img from './../../public/assets/black_moomin_transparent.png'
+import hare_img from './../../public/assets/hare.png'
+import adam_zajac_img from './../../public/assets/adam_zajac.png'
 
 type Props = {
   animal_type: 'sheep' | 'goat'
@@ -30,11 +39,11 @@ export function Menu(props: Props) {
         })}
         onClick={toggleAnimalType}
       >
-        <img src="./../assets/sheep.png" />
+        <img src={sheep_img} />
         <div>
           <div></div>
         </div>
-        <img src="./../assets/goat.png" />
+        <img src={goat_img} />
       </button>
       <div
         className={clsx({
@@ -50,9 +59,9 @@ export function Menu(props: Props) {
             className="sh-menu__item__button"
             onClick={() => props.switchScreen('birth')}
           >
-            <img src="./../assets/sheep.png" />
-            <img src="./../assets/goat.png" />
-            <img src="./../assets/birth.png" />
+            <img src={sheep_img} />
+            <img src={goat_img} />
+            <img src={birth_img} />
           </button>
           Urodzenie
         </div>
@@ -61,8 +70,8 @@ export function Menu(props: Props) {
             className="sh-menu__item__button"
             onClick={() => props.switchScreen('purchase')}
           >
-            <img src="./../assets/sheep.png" />
-            <img src="./../assets/goat.png" />
+            <img src={sheep_img} />
+            <img src={goat_img} />
 
             <svg
               className="sh-buy-arrow"
@@ -108,8 +117,8 @@ export function Menu(props: Props) {
             className="sh-menu__item__button"
             onClick={() => props.switchScreen('sell')}
           >
-            <img src="./../assets/sheep.png" />
-            <img src="./../assets/goat.png" />
+            <img src={sheep_img} />
+            <img src={goat_img} />
 
             <svg
               className="sh-sell-arrow"
@@ -155,9 +164,9 @@ export function Menu(props: Props) {
             className="sh-menu__item__button"
             onClick={() => props.switchScreen('death')}
           >
-            <img src="./../assets/sheep.png" />
-            <img src="./../assets/goat.png" />
-            <img src="./../assets/death.png" />
+            <img src={sheep_img} />
+            <img src={goat_img} />
+            <img src={death_img} />
           </button>
           Zgon
         </div>
@@ -166,9 +175,9 @@ export function Menu(props: Props) {
             className="sh-menu__item__button"
             onClick={() => props.switchScreen('search')}
           >
-            <img src="./../assets/sheep.png" />
-            <img src="./../assets/goat.png" />
-            <img src="./../assets/search.png" />
+            <img src={sheep_img} />
+            <img src={goat_img} />
+            <img src={search_img} />
           </button>
           Baza
         </div>
@@ -177,7 +186,7 @@ export function Menu(props: Props) {
             className="sh-menu__item__button"
             onClick={() => props.switchScreen('settings')}
           >
-            <img src="./../assets/settings.png" />
+            <img src={settings_img} />
           </button>
           Ustawienia
         </div>
@@ -198,11 +207,11 @@ export function Menu(props: Props) {
         <p>Sheep-O-Matic v1.0 made with ❤️ by:</p>
         <div>
           <div className="adam-zajac">
-            <img src="./../assets/adam_zajac.png" />
-            <img src="./../assets/hare.png" />
+            <img src={adam_zajac_img} />
+            <img src={hare_img} />
           </div>
           <div className="lilian-prus">
-            <img src="./../assets/black_moomin_transparent.png" />
+            <img src={black_moomin_transparent_img} />
             <div>
               <b>Lilian</b>
               <br />

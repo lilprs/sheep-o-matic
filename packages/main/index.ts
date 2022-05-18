@@ -63,7 +63,8 @@ app.whenReady().then(createWindow)
 
 app.on('window-all-closed', () => {
   win = null
-  if (process.platform !== 'darwin') app.quit()
+  app.quit()
+  // if (process.platform !== 'darwin') app.quit()
 })
 
 app.on('second-instance', () => {
@@ -87,7 +88,11 @@ ipcMain.on('print-to-pdf', async function (event, arg) {
   const pdfPath = await (dialog as any).showSaveDialog({
     defaultPath: 'raport.pdf',
   })
-  const win = new BrowserWindow({ width: 800, height: 600 })
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    show: false,
+  })
   await win.loadURL(
     'data:text/html;charset=utf-8,' +
       encodeURIComponent(arg)
@@ -101,6 +106,7 @@ ipcMain.on('print-to-pdf', async function (event, arg) {
   await writeFile(pdfPath.filePath, printed)
   // shell.openExternal('file://' + pdfPath)
   // event.sender.send('wrote-pdf', pdfPath)
+  event.reply('pdf-ok')
 })
 
 ipcMain.on('save-exported', async function (event, data) {
@@ -111,6 +117,7 @@ ipcMain.on('save-exported', async function (event, data) {
   })
 
   await writeFile(filePath.filePath, data)
+  event.reply('export-ok')
 })
 
 ipcMain.on('open-exported', async function (event) {
