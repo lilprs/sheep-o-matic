@@ -1,18 +1,12 @@
 import clsx from 'clsx'
-import {
-  Controller,
-  useForm,
-  useWatch,
-} from 'react-hook-form'
-import { format } from 'date-fns'
 import { DayPicker } from 'react-day-picker'
+import { Controller, useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import {
   AnimalSpecies,
   saveDatabase,
   store,
-  useStore,
 } from '../database'
-import toast from 'react-hot-toast'
 import { formatFormErrorMessage } from '../utils'
 
 type Props = {
@@ -26,6 +20,7 @@ export function Sell(props: Props) {
       sell_date: new Date(),
       registration_number: '',
       siedziba_stada_nabywcy: '',
+      dane_przewoznika: '',
     },
   })
   const onSubmit = (data: any) => {
@@ -70,6 +65,7 @@ export function Sell(props: Props) {
             sell_date: data.sell_date,
             siedziba_stada_nabywcy:
               data.siedziba_stada_nabywcy,
+            dane_przewoznika: data.dane_przewoznika ?? '',
           }
         }
         return a
@@ -149,6 +145,20 @@ export function Sell(props: Props) {
           <p className="sh-form__error">
             {formatFormErrorMessage(
               form.formState.errors.siedziba_stada_nabywcy
+            )}
+          </p>
+          <label className="sh-inline">
+            <span>Dane przewoźnika</span>
+            <input
+              {...form.register('dane_przewoznika', {
+                required: false,
+              })}
+              type="text"
+            />
+          </label>
+          <p className="sh-form__error">
+            {formatFormErrorMessage(
+              form.formState.errors.dane_przewoznika
             )}
           </p>
           <button type="submit">Zgłoś sprzedaż</button>

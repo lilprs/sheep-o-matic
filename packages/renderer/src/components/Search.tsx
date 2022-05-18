@@ -47,7 +47,7 @@ export function Search(props: Props) {
     })
   }
 
-  const makePdf = () => {
+  const makeReportPdf = () => {
     window.ipcRenderer.send(
       'print-to-pdf',
       `
@@ -196,6 +196,237 @@ export function Search(props: Props) {
     )
   }
 
+  const makeQuantityPdf = () => {
+    let first_date: Date | null = null
+    for (const a of store.animals) {
+      const birth_date = new Date(a.birth_date)
+      const purchase_date = a.purchase_date
+        ? new Date(a.purchase_date)
+        : null
+      if (purchase_date) {
+        if (
+          !first_date ||
+          purchase_date.getTime() < first_date.getTime()
+        ) {
+          first_date = purchase_date
+        }
+      } else {
+        if (
+          !first_date ||
+          birth_date.getTime() < first_date.getTime()
+        ) {
+          first_date = birth_date
+        }
+      }
+    }
+    let rows = []
+    if (first_date) {
+      const first_year = first_date.getFullYear()
+      for (let i = 0; ; i += 1) {
+        const year = first_year + i
+        const date = `${year}-12-31`
+        if (
+          new Date(`${year}-01-01`).getTime() >
+          new Date().getTime()
+        ) {
+          break
+        }
+        rows.push({
+          date,
+          count:
+            store.animals.filter((a) => {
+              if (a.species !== props.species) {
+                return false
+              }
+              const date = new Date(`${year}-12-31`)
+              const birth_date = new Date(a.birth_date)
+              const purchase_date = a.purchase_date
+                ? new Date(a.purchase_date)
+                : null
+              const sell_date = a.sell_date
+                ? new Date(a.sell_date)
+                : null
+              const death_date = a.death_date
+                ? new Date(a.death_date)
+                : null
+              if (birth_date.getTime() > date.getTime()) {
+                return false
+              }
+              if (
+                purchase_date &&
+                purchase_date.getTime() > date.getTime()
+              ) {
+                return false
+              }
+              if (
+                sell_date &&
+                sell_date.getTime() <= date.getTime()
+              ) {
+                return false
+              }
+              if (
+                death_date &&
+                death_date.getTime() <= date.getTime()
+              ) {
+                return false
+              }
+              return true
+            }).length + '',
+        })
+      }
+    }
+    window.ipcRenderer.send(
+      'print-to-pdf',
+      `
+      <p style="text-align: right; margin-right: 50px; margin-top: 10px; margin-bottom: 10px">
+        Karta wsadowa strona nr ............
+      </p>      
+      <table class="header" style="margin: 0 auto; margin-bottom: 10px; width: 100%">
+      <thead>
+        <tr>
+        <th colspan="14">Numer siedziby stada, numer miejsca gromadzenia zwierząt, numer targu, wystawy, pokazu lub konkursu, numer miejsca prowadzenia działalności w zakresie obrotu zwierzętami, pośrednictwa w tym obrocie lub skupu zwierząt, numer rzeźni *)</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>P</td>
+      <td>L</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      </tr>
+      </tbody>
+    </table>
+      <strong style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; text-align: center; margin: 10px 0; font-size: 18px">Wynik spisu stada owiec<sup>*)</sup>&nbsp;<div class="box">${
+        props.species === 'sheep' ? 'x' : '&nbsp;'
+      }</div> lub kóz<sup>*)</sup>&nbsp;<div class="box">${
+        props.species === 'goat' ? 'x' : '&nbsp;'
+      }</div></strong>
+      <strong style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; text-align: center; margin: 10px 0">Druk wypełnia się dla jednego gatunku</strong>
+      <strong style="display: flex; flex-wrap: wrap; justify-content: flex-start; align-items: center; margin: 10px 0; font-size: 18px">Spis stanu stada owiec<sup>*)</sup>&nbsp;<div class="box">${
+        props.species === 'sheep' ? 'x' : '&nbsp;'
+      }</div>&nbsp;lub kóz<sup>*)</sup>&nbsp;<div class="box">${
+        props.species === 'goat' ? 'x' : '&nbsp;'
+      }</div></strong>
+      <table>
+        <thead>
+          <tr>
+            <th>na dzień:</th>
+            <th>liczba zwierząt:</th>
+          </tr>
+        </thead>
+        <tbody>
+        ${rows
+          .map((row) => {
+            return `
+          <tr>
+            <td>
+            <div class="date">
+            <div class="box-group">
+              <div class="box">${
+                row.date[8]
+              }</div><div class="box">${row.date[9]}</div>
+            </div>
+            <div class="box-group">
+              <div class="box">${
+                row.date[5]
+              }</div><div class="box">${row.date[6]}</div>
+            </div>
+              <div class="box">${
+                row.date[0]
+              }</div><div class="box">${row.date[1]}</div>
+              <div class="box">${
+                row.date[2]
+              }</div><div class="box">${row.date[3]}</div>
+            </td>
+            </div>
+            <td>
+            <div class="num">
+            <div class="box">${
+              row.count[0] ?? ''
+            }</div><div class="box">${
+              row.count[1] ?? ''
+            }</div>
+            <div class="box">${
+              row.count[2] ?? ''
+            }</div><div class="box">${
+              row.count[3] ?? ''
+            }</div>
+            <div class="box">${
+              row.count[4] ?? ''
+            }</div><div class="box">${
+              row.count[4] ?? ''
+            }</div>
+            </div>
+            </td>
+          </tr>`
+          })
+          .join('')}
+        </tbody>
+      </table>
+      <p style="text-align: left; margin-top: 10px;">
+      <sup>*)</sup> Zaznaczyć właściwe wpisując X w odpowiednim kwadracie.<br />
+      Wynik spisu stada owiec albo kóz wypełnia się co najmniej raz na dwanaście miesięcy, nie później jednak niż w dniu 31 grudnia.
+    </p>      
+    <style>
+    body {
+      font-family: sans-serif;
+      font-size: 12px;
+      padding: 15px;
+    }
+    th, td {
+      border: none;
+      text-align: center;
+    }
+    table {
+      border-collapse: collapse;
+    }
+    .date, .num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .num {
+      margin-left: 40px;
+    }
+    .box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 30px;
+      border: solid 1px black;
+      margin: 1px;
+    }
+    .box-group {
+      display: inline-block;
+      margin-right: 10px;
+    }
+    .header {
+      font-family: sans-serif;
+      font-size: 12px;
+      border-collapse: collapse;
+    }
+    .header th, .header td {
+      border: solid 1px black;
+      padding: 4px;
+      text-align: center;
+      font-size: 12px;
+    }
+    </style>
+    `
+    )
+  }
+
   const columns = [
     {
       name: 'Numer ident.',
@@ -308,7 +539,12 @@ export function Search(props: Props) {
         </button>
 
         <button onClick={seed}>seed</button>
-        <button onClick={makePdf}>Generuj PDF</button>
+        <button onClick={makeReportPdf}>
+          Generuj księgę rejestracji
+        </button>
+        <button onClick={makeQuantityPdf}>
+          Generuj spis stada
+        </button>
 
         {/* <Tabs
           active={activeTab}
