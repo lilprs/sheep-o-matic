@@ -1,16 +1,13 @@
 import clsx from 'clsx'
+import { useState } from 'react'
+import DataTable from 'react-data-table-component'
 import { useForm } from 'react-hook-form'
 import {
   Animal,
   AnimalSpecies,
-  useStore,
   store as vanilla_store,
+  useStore,
 } from '../database'
-import DataTable from 'react-data-table-component'
-import { Tabs } from '@mantine/core'
-import { jsPDF } from 'jspdf'
-
-import { useMemo, useState } from 'react'
 
 type Props = {
   open: boolean
