@@ -7,6 +7,7 @@ import { Purchase } from './components/Purchase'
 import { Sell } from './components/Sell'
 import { Death } from './components/Death'
 import { Search } from './components/Search'
+import { Settings } from './components/Settings'
 
 const App = () => {
   const [species, setSpecies] =
@@ -44,6 +45,10 @@ const App = () => {
       <Search
         species={species}
         open={screen === 'search'}
+        onClose={() => setScreen('menu')}
+      />
+      <Settings
+        open={screen === 'settings'}
         onClose={() => setScreen('menu')}
       />
       <Toaster />

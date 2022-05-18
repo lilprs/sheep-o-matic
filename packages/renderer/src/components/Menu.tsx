@@ -172,6 +172,15 @@ export function Menu(props: Props) {
           </button>
           Baza
         </div>
+        <div className="sh-menu__item sh-menu__item--settings">
+          <button
+            className="sh-menu__item__button"
+            onClick={() => props.switchScreen('settings')}
+          >
+            <img src="./../assets/settings.png" />
+          </button>
+          Ustawienia
+        </div>
       </div>
       <p className="sh-menu__stats">
         Zwierząt w bazie: {store.animals.length} / Owiec:{' '}
@@ -185,6 +194,24 @@ export function Menu(props: Props) {
             .length
         }
       </p>
+      <div className="authors">
+        <p>Made with ❤️ by:</p>
+        <div>
+          <div className="adam-zajac">
+            <img src="./../assets/adam_zajac.png" />
+            <img src="./../assets/hare.png" />
+          </div>
+          <div className="lilian-prus">
+            <img src="./../assets/black_moomin_transparent.png" />
+            <div>
+              <b>Lilian</b>
+              <br />
+              <span>Prus</span>
+              <i>Moomin Hippo</i>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

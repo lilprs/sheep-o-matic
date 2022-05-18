@@ -23,7 +23,9 @@ export function Search(props: Props) {
   })
   const store = useStore()
   const [activeTab, setActiveTab] = useState(1)
-  const [selectedRows, setSelectedRows] = useState(false)
+  const [selectedRows, setSelectedRows] = useState<
+    Animal[]
+  >([])
   const [toggledClearRows, setToggleClearRows] =
     useState(false)
 
@@ -36,7 +38,15 @@ export function Search(props: Props) {
     setToggleClearRows(!toggledClearRows)
   }
 
-  console.log(store.animals)
+  console.log(selectedRows)
+
+  const herd_animals = store.animals.filter(
+    (a) => a.species === props.species
+  )
+
+  const pdf_animals = herd_animals.filter((a) =>
+    selectedRows.includes(a)
+  )
 
   const seed = () => {
     vanilla_store.setState((state) => {
@@ -106,7 +116,7 @@ export function Search(props: Props) {
       </tr>
       </thead>
       <tbody>
-        ${store.animals
+        ${pdf_animals
           .map((a, i) => {
             return `
           <tr>
@@ -198,7 +208,7 @@ export function Search(props: Props) {
 
   const makeQuantityPdf = () => {
     let first_date: Date | null = null
-    for (const a of store.animals) {
+    for (const a of pdf_animals) {
       const birth_date = new Date(a.birth_date)
       const purchase_date = a.purchase_date
         ? new Date(a.purchase_date)
@@ -234,7 +244,7 @@ export function Search(props: Props) {
         rows.push({
           date,
           count:
-            store.animals.filter((a) => {
+            pdf_animals.filter((a) => {
               if (a.species !== props.species) {
                 return false
               }
@@ -519,10 +529,6 @@ export function Search(props: Props) {
     },
   ]
 
-  const data = store.animals.filter((a) => {
-    return true
-  })
-
   return (
     <div
       className={clsx('sh-screen sh-form-screen', {
@@ -581,7 +587,7 @@ export function Search(props: Props) {
 
         <DataTable
           columns={columns as any}
-          data={data}
+          data={herd_animals}
           pagination
           selectableRows
           onSelectedRowsChange={handleChange}

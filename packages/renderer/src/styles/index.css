@@ -282,8 +282,8 @@ strong {
   cursor: pointer;
   margin-bottom: 6px;
   transition: transform ease-in 0.2s;
-  width: 128px;
-  height: 128px;
+  width: 108px;
+  height: 108px;
 }
 
 .sh-menu__item:hover .sh-menu__item__button,
@@ -293,8 +293,8 @@ strong {
 
 .sh-menu__item img:nth-child(1),
 .sh-menu__item img:nth-child(2) {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   margin: 0;
   padding: 0;
   border-radius: 12px;
@@ -319,8 +319,8 @@ strong {
   position: absolute;
   bottom: 4px;
   right: 4px;
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
   margin: 0;
   padding: 0;
   border-radius: 12px;
@@ -340,6 +340,12 @@ strong {
 .sh-menu__item--registration .sh-menu__item__button {
   background: #36b03c !important;
 } */
+
+.sh-menu__item--settings {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
 
 .sh-menu__animal-switcher {
   display: flex;
@@ -466,6 +472,82 @@ strong {
   pointer-events: none;
   height: 1px;
   padding: 0;
+}
+
+.authors {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: white;
+  font-family: 'Signika Negative';
+  font-weight: 700;
+}
+
+.authors > div {
+  display: flex;
+  gap: 20px;
+}
+
+.authors p {
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.lilian-prus {
+  display: flex;
+  color: white;
+  font-family: 'Signika Negative';
+  font-weight: 700;
+  font-size: 24px;
+  align-items: center;
+}
+
+
+.adam-zajac {
+  position: relative;
+  display: flex;
+}
+
+.adam-zajac img:nth-child(1) {
+  height: 90px;
+  margin-top: 5px;
+}
+
+.adam-zajac img:nth-child(2) {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  top: 18%;
+  left: 6%;
+}
+
+.lilian-prus img {
+  height: 100px;
+}
+
+.lilian-prus > div {
+  width: 80px;
+}
+
+.lilian-prus b {
+  transform: translateX(-12px);
+  display: inline-block;
+}
+
+.lilian-prus span {
+  transform: translateX(-10px);
+  display: inline-block;
+}
+
+.lilian-prus i {
+  transform: translateX(0);
+  margin-top: 2px;
+  display: block;
+  color: #b0b0b0;
+  font-size: 10px;
 }
 
 /* Datepicker */

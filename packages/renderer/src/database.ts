@@ -23,8 +23,14 @@ export type Animal = {
 
 export const store = createVanilla<{
   animals: Animal[]
+  settings: {
+    numer_siedziby_stada: string
+  }
 }>((set) => ({
   animals: [],
+  settings: {
+    numer_siedziby_stada: '',
+  },
 }))
 
 export const useStore = create(store)
@@ -51,6 +57,7 @@ export async function openDatabase() {
     }
     store.setState({
       animals: parsed_db.animals,
+      settings: parsed_db.settings,
     })
     await db.close()
   } catch (err) {}
@@ -63,6 +70,7 @@ export async function saveDatabase() {
     'keyval',
     JSON.stringify({
       animals: state.animals,
+      settings: state.settings,
     }),
     'database'
   )
