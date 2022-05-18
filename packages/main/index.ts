@@ -7,7 +7,7 @@ import {
 } from 'electron'
 import { release } from 'os'
 import { join } from 'path'
-import { writeFile } from 'fs/promises'
+import { writeFile, readFile } from 'fs/promises'
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1'))
@@ -27,6 +27,8 @@ let win: BrowserWindow | null = null
 async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
+    minWidth: 920,
+    minHeight: 600,
     webPreferences: {
       preload: join(__dirname, '../preload/index.cjs'),
     },
@@ -99,4 +101,25 @@ ipcMain.on('print-to-pdf', async function (event, arg) {
   await writeFile(pdfPath.filePath, printed)
   // shell.openExternal('file://' + pdfPath)
   // event.sender.send('wrote-pdf', pdfPath)
+})
+
+ipcMain.on('save-exported', async function (event, data) {
+  const filePath = await (dialog as any).showSaveDialog({
+    defaultPath: `baza-${
+      new Date().toISOString().split('T')[0]
+    }.json`,
+  })
+
+  await writeFile(filePath.filePath, data)
+})
+
+ipcMain.on('open-exported', async function (event) {
+  const filePath = await (dialog as any).showOpenDialog({
+    properties: ['openFile'],
+  })
+  const data = await readFile(
+    filePath.filePaths[0],
+    'utf-8'
+  )
+  event.reply('imported-data', data)
 })

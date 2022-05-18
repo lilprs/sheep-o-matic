@@ -8,6 +8,7 @@ import {
   store,
 } from '../database'
 import { formatFormErrorMessage } from '../utils'
+import { Button } from '@mantine/core'
 
 type Props = {
   open: boolean
@@ -28,6 +29,17 @@ export function Settings(props: Props) {
     saveDatabase()
     toast.success('Ustawienia zostały zapisane')
     props.onClose()
+  }
+  const exportDatabase = () => {
+    const exported = JSON.stringify({
+      _version: 1,
+      _date: new Date().toISOString(),
+      ...store.getState(),
+    })
+    window.ipcRenderer.send('save-exported', exported)
+  }
+  const importDatabase = () => {
+    window.ipcRenderer.send('open-exported')
   }
   return (
     <div
@@ -65,6 +77,31 @@ export function Settings(props: Props) {
           </p>
           <button type="submit">Zapisz ustawienia</button>
         </form>
+        <div
+          style={{
+            marginLeft: '-5px',
+            marginRight: '-5px',
+            marginTop: '20px',
+            display: 'flex',
+          }}
+        >
+          <Button
+            size="sm"
+            style={{ margin: '0 5px' }}
+            color="dark"
+            onClick={exportDatabase}
+          >
+            Eksportuj bazę danych
+          </Button>
+          <Button
+            size="sm"
+            style={{ margin: '0 5px' }}
+            color="dark"
+            onClick={importDatabase}
+          >
+            Importuj bazę danych
+          </Button>
+        </div>
       </div>
     </div>
   )

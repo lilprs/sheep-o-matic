@@ -53,7 +53,7 @@ export function Death(props: Props) {
     store.setState((state) => ({
       animals: state.animals.map((a) => {
         if (
-          a.registration_number ===
+          a.registration_number.toLowerCase().trim() ===
           normalized_registration_number
         ) {
           return {

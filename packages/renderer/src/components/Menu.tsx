@@ -195,7 +195,7 @@ export function Menu(props: Props) {
         }
       </p>
       <div className="authors">
-        <p>Made with ❤️ by:</p>
+        <p>Sheep-O-Matic v1.0 made with ❤️ by:</p>
         <div>
           <div className="adam-zajac">
             <img src="./../assets/adam_zajac.png" />

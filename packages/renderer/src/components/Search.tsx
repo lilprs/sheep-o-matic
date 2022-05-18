@@ -8,6 +8,13 @@ import {
   store as vanilla_store,
   useStore,
 } from '../database'
+import {
+  Button,
+  Input,
+  InputWrapper,
+  Select,
+  TextInput,
+} from '@mantine/core'
 
 type Props = {
   open: boolean
@@ -28,24 +35,125 @@ export function Search(props: Props) {
   >([])
   const [toggledClearRows, setToggleClearRows] =
     useState(false)
+  const [sorting, setSorting] = useState(
+    'data-przybycia-malejaco'
+  )
+  const [
+    registration_number_filter,
+    setRegistrationNumberFilter,
+  ] = useState('')
+  const [
+    mother_registration_number_filter,
+    setMotherRegistrationNumberFilter,
+  ] = useState('')
 
   const handleChange = ({ selectedRows }: any) => {
     setSelectedRows(selectedRows)
   }
 
-  // Toggle the state so React Data Table changes to clearSelectedRows are triggered
-  const handleClearRows = () => {
-    setToggleClearRows(!toggledClearRows)
-  }
+  const herd_animals = store.animals
+    .filter((a) => {
+      if (a.species !== props.species) {
+        return false
+      }
+      if (
+        registration_number_filter.trim() !== '' &&
+        !a.registration_number.includes(
+          registration_number_filter.trim()
+        )
+      ) {
+        return false
+      }
+      if (
+        mother_registration_number_filter.trim() !== '' &&
+        !a.mother_registration_number.includes(
+          mother_registration_number_filter.trim()
+        )
+      ) {
+        return false
+      }
+      return true
+    })
+    .sort((a, b) => {
+      if (sorting === 'numer-identyfikacyjny') {
+        return a.registration_number < b.registration_number
+          ? -1
+          : 1
+      }
+      if (sorting === 'numer-identyfikacyjny-matki') {
+        return a.mother_registration_number <
+          b.mother_registration_number
+          ? -1
+          : 1
+      }
+      const birth_date_a = new Date(a.birth_date)
+      const purchase_date_a = a.purchase_date
+        ? new Date(a.purchase_date)
+        : null
+      const data_przybycia_a =
+        purchase_date_a ?? birth_date_a
 
-  console.log(selectedRows)
+      const birth_date_b = new Date(b.birth_date)
+      const purchase_date_b = b.purchase_date
+        ? new Date(b.purchase_date)
+        : null
+      const data_przybycia_b =
+        purchase_date_b ?? birth_date_b
+      if (sorting === 'data-przybycia-malejaco') {
+        return data_przybycia_a.getTime() >
+          data_przybycia_b.getTime()
+          ? -1
+          : 1
+      }
+      if (sorting === 'data-przybycia-rosnaco') {
+        return data_przybycia_a.getTime() <
+          data_przybycia_b.getTime()
+          ? -1
+          : 1
+      }
 
-  const herd_animals = store.animals.filter(
-    (a) => a.species === props.species
-  )
+      const death_date_a = a.death_date
+        ? new Date(a.death_date)
+        : null
+      const sell_date_a = a.sell_date
+        ? new Date(a.sell_date)
+        : null
+      const data_ubycia_a = sell_date_a ?? death_date_a
 
-  const pdf_animals = herd_animals.filter((a) =>
-    selectedRows.includes(a)
+      const death_date_b = b.death_date
+        ? new Date(b.death_date)
+        : null
+      const sell_date_b = b.sell_date
+        ? new Date(b.sell_date)
+        : null
+      const data_ubycia_b = sell_date_b ?? death_date_b
+      if (
+        sorting === 'data-ubycia-malejaco' &&
+        data_ubycia_a &&
+        data_ubycia_b
+      ) {
+        return data_ubycia_a.getTime() >
+          data_ubycia_b.getTime()
+          ? -1
+          : 1
+      }
+      if (
+        sorting === 'data-ubycia-rosnaco' &&
+        data_ubycia_a &&
+        data_ubycia_b
+      ) {
+        return data_ubycia_a.getTime() <
+          data_ubycia_b.getTime()
+          ? -1
+          : 1
+      }
+      return 0
+    })
+
+  const pdf_animals = store.animals.filter(
+    (a) =>
+      a.species === props.species &&
+      selectedRows.includes(a)
   )
 
   const seed = () => {
@@ -57,11 +165,17 @@ export function Search(props: Props) {
     })
   }
 
+  const numer_siedziby = store.settings.numer_siedziby_stada
+
   const makeReportPdf = () => {
+    if (pdf_animals.length < 1) {
+      window.alert('Nie wybrano żadnych zwierząt')
+      return
+    }
     window.ipcRenderer.send(
       'print-to-pdf',
       `
-      <p style="text-align: right; margin-right: 50px; margin-top: 10px; margin-bottom: 10px">
+      <p style="display: none; text-align: right; margin-right: 50px; margin-top: 10px; margin-bottom: 10px">
         Karta wsadowa strona nr ............
       </p>
       <table style="margin: 0 auto; margin-bottom: 10px; width: 100%">
@@ -72,20 +186,20 @@ export function Search(props: Props) {
         </thead>
         <tbody>
         <tr>
-        <td>P</td>
-        <td>L</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>${numer_siedziby[0] ?? 'P'}</td>
+        <td>${numer_siedziby[1] ?? 'L'}</td>
+        <td>${numer_siedziby[2] ?? ''}</td>
+        <td>${numer_siedziby[3] ?? ''}</td>
+        <td>${numer_siedziby[4] ?? ''}</td>
+        <td>${numer_siedziby[5] ?? ''}</td>
+        <td>${numer_siedziby[6] ?? ''}</td>
+        <td>${numer_siedziby[7] ?? ''}</td>
+        <td>${numer_siedziby[8] ?? ''}</td>
+        <td>${numer_siedziby[9] ?? ''}</td>
+        <td>${numer_siedziby[10] ?? ''}</td>
+        <td>${numer_siedziby[11] ?? ''}</td>
+        <td>${numer_siedziby[12] ?? ''}</td>
+        <td>${numer_siedziby[13] ?? ''}</td>
         </tr>
         </tbody>
       </table>
@@ -154,9 +268,7 @@ export function Search(props: Props) {
                   ).toLocaleDateString()
                 : ''
             }</td>
-            <td rowspan="2">${
-              a.siedziba_stada_nabywcy ?? ''
-            }</td>
+            <td>${a.siedziba_stada_nabywcy ?? ''}</td>
             <td rowspan="2" style="width: 150px"></td>
           </tr>
           <tr>
@@ -164,6 +276,7 @@ export function Search(props: Props) {
           <td>${
             a.sell_date ? 'Z' : a.death_date ? 'PG' : ''
           }</td>
+          <td>${a.dane_przewoznika ?? ''}</td>
           </tr>`
           })
           .join('')}
@@ -207,6 +320,10 @@ export function Search(props: Props) {
   }
 
   const makeQuantityPdf = () => {
+    if (pdf_animals.length < 1) {
+      window.alert('Nie wybrano żadnych zwierząt')
+      return
+    }
     let first_date: Date | null = null
     for (const a of pdf_animals) {
       const birth_date = new Date(a.birth_date)
@@ -288,7 +405,7 @@ export function Search(props: Props) {
     window.ipcRenderer.send(
       'print-to-pdf',
       `
-      <p style="text-align: right; margin-right: 50px; margin-top: 10px; margin-bottom: 10px">
+      <p style="display: none; text-align: right; margin-right: 50px; margin-top: 10px; margin-bottom: 10px">
         Karta wsadowa strona nr ............
       </p>      
       <table class="header" style="margin: 0 auto; margin-bottom: 10px; width: 100%">
@@ -299,26 +416,26 @@ export function Search(props: Props) {
       </thead>
       <tbody>
       <tr>
-      <td>P</td>
-      <td>L</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>${numer_siedziby[0] ?? 'P'}</td>
+      <td>${numer_siedziby[1] ?? 'L'}</td>
+      <td>${numer_siedziby[2] ?? ''}</td>
+      <td>${numer_siedziby[3] ?? ''}</td>
+      <td>${numer_siedziby[4] ?? ''}</td>
+      <td>${numer_siedziby[5] ?? ''}</td>
+      <td>${numer_siedziby[6] ?? ''}</td>
+      <td>${numer_siedziby[7] ?? ''}</td>
+      <td>${numer_siedziby[8] ?? ''}</td>
+      <td>${numer_siedziby[9] ?? ''}</td>
+      <td>${numer_siedziby[10] ?? ''}</td>
+      <td>${numer_siedziby[11] ?? ''}</td>
+      <td>${numer_siedziby[12] ?? ''}</td>
+      <td>${numer_siedziby[13] ?? ''}</td>
       </tr>
       </tbody>
     </table>
       <strong style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; text-align: center; margin: 10px 0; font-size: 18px">Wynik spisu stada owiec<sup>*)</sup>&nbsp;<div class="box">${
         props.species === 'sheep' ? 'x' : '&nbsp;'
-      }</div> lub kóz<sup>*)</sup>&nbsp;<div class="box">${
+      }</div>&nbsp;lub kóz<sup>*)</sup>&nbsp;<div class="box">${
         props.species === 'goat' ? 'x' : '&nbsp;'
       }</div></strong>
       <strong style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; text-align: center; margin: 10px 0">Druk wypełnia się dla jednego gatunku</strong>
@@ -531,12 +648,14 @@ export function Search(props: Props) {
 
   return (
     <div
-      className={clsx('sh-screen sh-form-screen', {
+      className={clsx('sh-screen sh-generic-screen', {
         'sh-screen--hidden': !props.open,
       })}
     >
-      <div className="sh-form-screen__dialog--wide">
-        <h1>Baza zwierząt</h1>
+      <div className="sh-generic-screen__dialog--wide">
+        <h1>
+          Baza {props.species === 'sheep' ? 'owiec' : 'kóz'}
+        </h1>
         <button
           className="sh-dialog__close"
           onClick={() => props.onClose()}
@@ -544,13 +663,93 @@ export function Search(props: Props) {
           ×
         </button>
 
-        <button onClick={seed}>seed</button>
-        <button onClick={makeReportPdf}>
-          Generuj księgę rejestracji
-        </button>
-        <button onClick={makeQuantityPdf}>
-          Generuj spis stada
-        </button>
+        <div
+          style={{
+            display: 'flex',
+            width: '100%',
+            flexGrow: '1',
+            gap: '10px',
+            marginBottom: '10px',
+          }}
+        >
+          {/* <button onClick={seed}>seed</button> */}
+          <Select
+            style={{
+              width: '320px',
+            }}
+            value={sorting}
+            onChange={setSorting as any}
+            label="Sortowanie"
+            data={[
+              {
+                value: 'data-przybycia-malejaco',
+                label: 'Data przybycia (od najnowszych)',
+              },
+              {
+                value: 'data-przybycia-rosnaco',
+                label: 'Data przybycia (od najstarszych)',
+              },
+              {
+                value: 'data-ubycia-malejaco',
+                label: 'Data ubycia (od najnowszych)',
+              },
+              {
+                value: 'data-ubycia-rosnaco',
+                label: 'Data ubycia (od najstarszych)',
+              },
+              {
+                value: 'numer-identyfikacyjny',
+                label: 'Numer identyfikacyjny',
+              },
+              {
+                value: 'numer-identyfikacyjny-matki',
+                label: 'Numer identyfikacyjny matki',
+              },
+            ]}
+          />
+          <TextInput
+            label="Filtr num. ident."
+            value={registration_number_filter}
+            onChange={(ev) => {
+              setRegistrationNumberFilter(
+                ev.currentTarget.value
+              )
+            }}
+          />
+          <TextInput
+            label="Filtr num. ident. matki"
+            value={mother_registration_number_filter}
+            onChange={(ev) => {
+              setMotherRegistrationNumberFilter(
+                ev.currentTarget.value
+              )
+            }}
+          />
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+            }}
+          >
+            <Button
+              size="xs"
+              style={{ margin: '0 5px' }}
+              color="green"
+              onClick={makeReportPdf}
+            >
+              Generuj księgę rejestracji
+            </Button>
+            <br />
+            <Button
+              size="xs"
+              style={{ margin: '0 5px' }}
+              color="green"
+              onClick={makeQuantityPdf}
+            >
+              Generuj spis stada
+            </Button>
+          </div>
+        </div>
 
         {/* <Tabs
           active={activeTab}
@@ -582,17 +781,21 @@ export function Search(props: Props) {
           <Tabs.Tab label="zgony" />
           <Tabs.Tab label="sprzedaże" />
         </Tabs> */}
-
-        <form></form>
-
-        <DataTable
-          columns={columns as any}
-          data={herd_animals}
-          pagination
-          selectableRows
-          onSelectedRowsChange={handleChange}
-          clearSelectedRows={toggledClearRows}
-        />
+        <div
+          style={{
+            margin: '-20px',
+            marginTop: '0',
+          }}
+        >
+          <DataTable
+            columns={columns as any}
+            data={herd_animals}
+            pagination
+            selectableRows
+            onSelectedRowsChange={handleChange}
+            clearSelectedRows={toggledClearRows}
+          />
+        </div>
       </div>
     </div>
   )

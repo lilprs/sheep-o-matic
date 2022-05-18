@@ -57,12 +57,12 @@ export function Sell(props: Props) {
     store.setState((state) => ({
       animals: state.animals.map((a) => {
         if (
-          a.registration_number ===
+          a.registration_number.toLowerCase().trim() ===
           normalized_registration_number
         ) {
           return {
             ...a,
-            sell_date: data.sell_date,
+            sell_date: data.sell_date.toISOString(),
             siedziba_stada_nabywcy:
               data.siedziba_stada_nabywcy,
             dane_przewoznika: data.dane_przewoznika ?? '',
