@@ -287,7 +287,7 @@ export function Search(props: Props) {
     <table style="width: 100%">
           <thead>
             <tr>
-              <th>Data</th>
+              <th style="width:100px">Data</th>
               <th>Uwagi dotyczące kontroli lub korekty</th>
               <th>Pieczątka i podpis osoby dokonującej kontroli lub pracownika Agencji Restrukturyzacji i Modernizacji Rolnictwa</th>
             </tr>
