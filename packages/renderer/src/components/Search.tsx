@@ -556,6 +556,10 @@ export function Search(props: Props) {
   }
 
   const deleteAnimals = () => {
+    if (selectedRows.length < 1) {
+      window.alert('Nie wybrano żadnych zwierząt')
+      return
+    }
     const ok = window.confirm(
       `Czy na pewno usunąć wybrane zwierzęta?`
     )
@@ -724,7 +728,7 @@ export function Search(props: Props) {
             ]}
           />
           <TextInput
-            label="Filtr num. ident."
+            label="Num. ident."
             value={registration_number_filter}
             onChange={(ev) => {
               setRegistrationNumberFilter(
@@ -733,7 +737,7 @@ export function Search(props: Props) {
             }}
           />
           <TextInput
-            label="Filtr num. ident. matki"
+            label="Num. ident. matki"
             value={mother_registration_number_filter}
             onChange={(ev) => {
               setMotherRegistrationNumberFilter(

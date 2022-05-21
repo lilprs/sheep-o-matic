@@ -115,7 +115,9 @@ ipcMain.on('save-exported', async function (event, data) {
       new Date().toISOString().split('T')[0]
     }.json`,
   })
-
+  if (!filePath.filePath) {
+    return
+  }
   await writeFile(filePath.filePath, data)
   event.reply('export-ok')
 })
@@ -124,6 +126,9 @@ ipcMain.on('open-exported', async function (event) {
   const filePath = await (dialog as any).showOpenDialog({
     properties: ['openFile'],
   })
+  if (!filePath.filePaths[0]) {
+    return
+  }
   const data = await readFile(
     filePath.filePaths[0],
     'utf-8'

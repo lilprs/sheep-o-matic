@@ -2,7 +2,8 @@
   "appId": "sheepomatic@mmcenter.info",
   "asar": true,
   "directories": {
-    "output": "release/${version}"
+    "output": "release/${version}",
+    "buildResources": "resources"
   },
   "files": [
     "dist"

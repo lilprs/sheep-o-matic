@@ -5,7 +5,7 @@
   "author": "Lilian Prus <h3ruta@icloud.com>",
   "scripts": {
     "dev": "node scripts/watch.mjs",
-    "build": "tsc --noEmit -p packages/renderer/tsconfig.json && node scripts/build.mjs && electron-builder -mwl"
+    "build": "tsc --noEmit -p packages/renderer/tsconfig.json && node scripts/build.mjs && electron-builder -mw"
   },
   "engines": {
     "node": ">=14.17.0"
