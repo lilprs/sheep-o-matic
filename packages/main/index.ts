@@ -102,6 +102,7 @@ ipcMain.on('print-to-pdf', async function (event, arg) {
     landscape: true,
     marginsType: 2,
   })
+  win.destroy()
 
   await writeFile(pdfPath.filePath, printed)
   // shell.openExternal('file://' + pdfPath)
